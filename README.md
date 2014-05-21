@@ -1,4 +1,4 @@
-CIS-6930
+CIS6930
 ========
 
 Multimedia and E-Commerce
