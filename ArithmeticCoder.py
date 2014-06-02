@@ -1,11 +1,13 @@
 import random
 import sys
+import struct
 
 # Character probablities
 prob = {
-    'a' : (0.0, 0.4),
-    'b' : (0.4, 0.3),
-    'c' : (0.7, 0.2),
+    'a' : (0.0, 0.3),
+    'b' : (0.3, 0.2),
+    'c' : (0.5, 0.2),
+    'd' : (0.7, 0.2),
     '@' : (0.9, 0.1)
 }
 
@@ -24,7 +26,16 @@ def encode(string, prob):
 
     encoded_value = random.uniform(start, start+width)
     print(encoded_value)
+    print(floatToBinary(encoded_value))
     return encoded_value
+
+def floatToBinary(value):
+    val = struct.unpack('Q', struct.pack('d', value))[0]
+    return bin(val)
+
+def binaryToFloat(value):
+    hx = hex(int(str(value), 2))
+    return struct.unpack('d', struct.pack('q', int(hx, 16)))[0]
 
 def decode(num, prob):
     print('Decode Number: ')
