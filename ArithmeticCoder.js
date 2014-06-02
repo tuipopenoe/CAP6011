@@ -39,6 +39,56 @@ function getRandomUniform(min, max){
 
 function floatToBinary(value){
     // TODO: float to binary conversion
+    if((byteOffset + 8) > this.byteLength){
+        throw "Invalid byteOffset: Cannot write beyond view boundaries.";
+    }
+
+    var hiWord = 0, loWord = 0;
+    switch(value){
+        case Number.POSITIVE_INFINITY:
+            hiWord = 0x7FF00000;
+            break;
+        case Number.NEGATIVE_INFINITY:
+            hiWord = 0xFFF00000;
+            break;
+        case +0.0:
+            hiWord = 0x40000000;
+            break;
+        case -0.0:
+            hiWord = 0xC0000000;
+            break;
+        default:
+            if(Number.isNaN(value)){
+                hiWord = 0x7FF80000;
+                break;
+            }
+            if(value <= -0.0){
+                hiWord = 0x80000000;
+                value = -value;
+            }
+
+            var exponent = Math.floor(Math.log(value) / Math.log(2));
+            var significand = Math.floor((value / Math.pow(2, exponent))
+                * Math.pow(2, 52));
+
+            loWord = significand & 0xFFFFFFFF;
+            significand /= Math.pow(2, 32);
+
+            exponent += 1023;
+            if(exponent >= 0x7FF){
+                exponent = 0x7FF;
+                significand = 0;
+            }
+            else if(exponent < 0){
+                exponent = 0;
+            }
+
+            hiWord = hiWord | (exponent << 20);
+            hiWord = hiWord | (significand & ~(-1 << 20));
+        break;
+    }
+
+    return [hiWord, loWord];
 }
 
 function decode(num, prob){
