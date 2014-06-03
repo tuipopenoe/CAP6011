@@ -34,11 +34,14 @@ function encode(string, prob){
 
     var start = 0;
     var width = 1;
-    for(var key in prob){
+    for(var i = 0; i < string.length; i++){
         console.log(key);
         console.log(prob);
-        var d_start = prob[key][0];
-        var d_width = prob[key][1];
+        ch = string.charAt(i);
+        console.log(ch);
+
+        var d_start = prob[ch][0];
+        var d_width = prob[ch][1];
 
         start += d_start*width;
         console.log(start);
@@ -119,11 +122,12 @@ function decode(num, prob){
     var width;
     while(true){
         for(var key in prob){
-            console.log('start: ' + start);
             start = prob[key][0];
-            console.log('width: ' + width);
+            console.log('start: ' + start);
             width = prob[key][1];
+            console.log('width: ' + width);
             if((0 <= (num - start)) && ((num -start) < width)){
+                console.log('Entered if check');
                 num = (num - start) / width;
                 console.log(num);
                 decoded += (key);
