@@ -12,13 +12,23 @@ prob = {
 }
 
 var input;
+var outputHTML;
 
 function compress(){
+    $('#output').empty();
     console.log('Compress()' + input);
+    outputHTML = '<p>Compress('+ input + ')</div>';
+    append(outputHTML, 1);
+
     var encoded_input = encode(input, prob);
-    console.log('Decode()');
+
     decode(encoded_input, prob);
 
+}
+
+function append(html, time){
+    $(outputHTML).hide().appendTo('#output').slideUp(300).delay(1000 * time)
+        .fadeIn(1000);
 }
 
 function updateInput(){
@@ -28,16 +38,19 @@ function updateInput(){
 }
 
 
-function encode(string, prob){
-    console.log('Encode String: ' + string);
+function encode(str, prob){
+    console.log('Encode String: ' + str);
+    outputHTML = '<p>Encode String: ' + str + '</p>';
+    append(outputHTML, 2);
     console.log('Character Probabilities: ' + prob);
 
     var start = 0;
     var width = 1;
-    for(var i = 0; i < string.length; i++){
-        console.log(key);
+    for(var i = 0; i < str.length; i++){
+        console.log(str.charAt(i));
+
         console.log(prob);
-        ch = string.charAt(i);
+        ch = str.charAt(i);
         console.log(ch);
 
         var d_start = prob[ch][0];
@@ -45,12 +58,19 @@ function encode(string, prob){
 
         start += d_start*width;
         console.log(start);
+        outputHTML = '<p>' + str.charAt(i) + '</p><p>Start: ' + start + '</p>';
+        append(outputHTML, 3);
         width *= d_width;
     }
 
     var encoded_value = getRandomUniform(start, start + width);
     console.log(encoded_value);
+    outputHTML = '<p> Encoded value: ' + encoded_value + '</p>';
+    append(outputHTML, 4);
     console.log(floatToBinary(encoded_value));
+    outputHTML = '<p>Binary Representation: </p><p>'
+        + floatToBinary(encoded_value) + '</p>';
+    append(outputHTML, 5);
 
     console.log('Encoded Value: ' + encoded_value);
     return encoded_value;
@@ -62,61 +82,19 @@ function getRandomUniform(min, max){
 }
 
 function floatToBinary(value){
-    /*if((byteOffset + 8) > this.byteLength){
-        throw "Invalid byteOffset: Cannot write beyond view boundaries.";
-    }*/
-
-    var hiWord = 0, loWord = 0;
-    switch(value){
-        case Number.POSITIVE_INFINITY:
-            hiWord = 0x7FF00000;
-            break;
-        case Number.NEGATIVE_INFINITY:
-            hiWord = 0xFFF00000;
-            break;
-        case +0.0:
-            hiWord = 0x40000000;
-            break;
-        case -0.0:
-            hiWord = 0xC0000000;
-            break;
-        default:
-            if(Number.isNaN(value)){
-                hiWord = 0x7FF80000;
-                break;
-            }
-            if(value <= -0.0){
-                hiWord = 0x80000000;
-                value = -value;
-            }
-
-            var exponent = Math.floor(Math.log(value) / Math.log(2));
-            var significand = Math.floor((value / Math.pow(2, exponent))
-                * Math.pow(2, 52));
-
-            loWord = significand & 0xFFFFFFFF;
-            significand /= Math.pow(2, 32);
-
-            exponent += 1023;
-            if(exponent >= 0x7FF){
-                exponent = 0x7FF;
-                significand = 0;
-            }
-            else if(exponent < 0){
-                exponent = 0;
-            }
-
-            hiWord = hiWord | (exponent << 20);
-            hiWord = hiWord | (significand & ~(-1 << 20));
-        break;
+    if(value >= 0) {
+        return value.toString(2);
     }
-
-    return [hiWord, loWord];
+    else {
+        return (~value).toString(2);
+    }
 }
 
 function decode(num, prob){
     console.log('Decode Number: ');
     console.log(num);
+    outputHTML = '<p>Decode Number: ' + num + '</p>';
+    append(outputHTML, 6);
     var decoded = '';
     var start;
     var width;
@@ -127,12 +105,15 @@ function decode(num, prob){
             width = prob[key][1];
             console.log('width: ' + width);
             if((0 <= (num - start)) && ((num -start) < width)){
-                console.log('Entered if check');
                 num = (num - start) / width;
+                outputHTML = '<p> Encoded Remainder: ' + num + '</p>';
+                append(outputHTML, 7);
                 console.log(num);
                 decoded += (key);
                 console.log(key);
                 console.log('Decoded string: ' + decoded);
+                outputHTML = '<p>Decoded string: ' + decoded + '</p>';
+                append(outputHTML, 7);
                 break;
             }
         }
@@ -144,6 +125,8 @@ function decode(num, prob){
     decoded = decoded.substring(0, decoded.length-1);
     console.log(decoded);
     console.log('Decoded string: ');
+    outputHTML = '<p>Final String: ' + decoded + '</p>';
+    append(outputHTML, 9);
     console.log(decoded);
     return decoded;
 }
