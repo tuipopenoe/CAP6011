@@ -4,17 +4,21 @@
 // Arbitrary Character Probabilities
 // TODO: Use an input form to change
 prob = {
-    'a' : [0.0, 0.4],
-    'b' : [0.4, 0.3],
-    'c' : [0.7, 0.2],
+    'a' : [0.0, 0.3],
+    'b' : [0.3, 0.2],
+    'c' : [0.5, 0.2],
+    'd' : [0.7, 0.2],
     '@' : [0.9, 0.1]
 }
 
 var input;
 
 function compress(){
-    encode(input, prob);
-    console.log('Encode Input: ' + input);
+    console.log('Compress()' + input);
+    var encoded_input = encode(input, prob);
+    console.log('Decode()');
+    decode(encoded_input, prob);
+
 }
 
 function updateInput(){
@@ -30,11 +34,11 @@ function encode(string, prob){
 
     var start = 0;
     var width = 1;
-    for(cha in string){
-        console.log(cha);
+    for(var key in prob){
+        console.log(key);
         console.log(prob);
-        var d_start = prob[cha][0];
-        var d_width = prob[cha][1];
+        var d_start = prob[key][0];
+        var d_width = prob[key][1];
 
         start += d_start*width;
         console.log(start);
@@ -45,6 +49,7 @@ function encode(string, prob){
     console.log(encoded_value);
     console.log(floatToBinary(encoded_value));
 
+    console.log('Encoded Value: ' + encoded_value);
     return encoded_value;
 }
 
@@ -54,10 +59,9 @@ function getRandomUniform(min, max){
 }
 
 function floatToBinary(value){
-    // TODO: float to binary conversion
-    if((byteOffset + 8) > this.byteLength){
+    /*if((byteOffset + 8) > this.byteLength){
         throw "Invalid byteOffset: Cannot write beyond view boundaries.";
-    }
+    }*/
 
     var hiWord = 0, loWord = 0;
     switch(value){
@@ -110,29 +114,32 @@ function floatToBinary(value){
 function decode(num, prob){
     console.log('Decode Number: ');
     console.log(num);
-    var string = [];
+    var decoded = '';
     var start;
     var width;
     while(true){
         for(var key in prob){
-            start = key[0];
-            width = key[1];
-            if((0 <= (num - start) && ((num -start) < width))){
+            console.log('start: ' + start);
+            start = prob[key][0];
+            console.log('width: ' + width);
+            width = prob[key][1];
+            if((0 <= (num - start)) && ((num -start) < width)){
                 num = (num - start) / width;
                 console.log(num);
-                string.append(key);
-                console.log(string);
+                decoded += (key);
+                console.log(key);
+                console.log('Decoded string: ' + decoded);
                 break;
             }
         }
-        if(symbol == '@'){
+        if(key == '@'){
             break;
         }
     }
-    var decoded;
-    for(i in string){
-        decoded += i;
-    }
+
+    decoded = decoded.substring(0, decoded.length-1);
+    console.log(decoded);
+    console.log('Decoded string: ');
     console.log(decoded);
     return decoded;
 }

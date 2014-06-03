@@ -1,3 +1,6 @@
+# Tui Popenoe
+# ArithmeticCoder.py
+
 import random
 import sys
 import struct
