@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <script type='text/javascript' src='ArithmeticCoder.js'></script>
+    </head>
     <body>
         <div>
 
@@ -10,11 +13,9 @@
             </textarea>
         </div>
         <div>
-            <select id='model' onchange='updateDescription()'>
-                <option></option>
-                <option></option>
-                <option>></option>
-            </select>
+            <input type='text' id='stringInput' onchange='updateInput()'
+                placeholder='Enter a string consisting of "a", "b", "c" or "d"'
+                style='width: 300px'/>
             <button onclick='compress()'> Compress </button>
         </div>
         <div id='log'>

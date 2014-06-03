@@ -10,6 +10,20 @@ prob = {
     '@' : [0.9, 0.1]
 }
 
+var input;
+
+function compress(){
+    encode(input, prob);
+    console.log('Encode Input: ' + input);
+}
+
+function updateInput(){
+    input = document.getElementById('stringInput').value;
+    input += '@';
+    console.log('Updated Input: ' + input);
+}
+
+
 function encode(string, prob){
     console.log('Encode String: ' + string);
     console.log('Character Probabilities: ' + prob);
@@ -17,8 +31,10 @@ function encode(string, prob){
     var start = 0;
     var width = 1;
     for(cha in string){
-        var d_start = prob.cha[0];
-        var d_width = prob.cha[1];
+        console.log(cha);
+        console.log(prob);
+        var d_start = prob[cha][0];
+        var d_width = prob[cha][1];
 
         start += d_start*width;
         console.log(start);
@@ -101,7 +117,7 @@ function decode(num, prob){
         for(var key in prob){
             start = key[0];
             width = key[1];
-            if((0 < = (num - start) && ((num -start) < width))){
+            if((0 <= (num - start) && ((num -start) < width))){
                 num = (num - start) / width;
                 console.log(num);
                 string.append(key);
