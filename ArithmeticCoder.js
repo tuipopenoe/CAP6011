@@ -3,19 +3,35 @@
 
 // Arbitrary Character Probabilities
 // TODO: Use an input form to change
-prob = {
+ var prob; /*= {
     'a' : [0.0, 0.3],
     'b' : [0.3, 0.2],
     'c' : [0.5, 0.2],
     'd' : [0.7, 0.2],
     '@' : [0.9, 0.1]
-}
+}*/
+
+    var a;
+    var b;
+    var c;
+    var d;
+    var widtha;
+    var widthb;
+    var widthc;
+    var widthd;
 
 var input;
 var outputHTML;
 
+window.onload = function(){
+    updateInput();
+}
+
 function compress(){
     $('#output').empty();
+
+    setProbabilityTable();
+
     console.log('Compress()' + input);
     outputHTML = '<p>Compress('+ input + ')</div>';
     append(outputHTML, 1);
@@ -34,9 +50,35 @@ function append(html, time){
 function updateInput(){
     input = document.getElementById('stringInput').value;
     input += '@';
+    a = document.getElementById('a').value;
+    b = document.getElementById('b').value;
+    c = document.getElementById('c').value;
+    d = document.getElementById('d').value;
+    widtha = document.getElementById('widtha').value;
+    widthb = document.getElementById('widthb').value;
+    widthc = document.getElementById('widthc').value;
+    widthd = document.getElementById('widthd').value;
     console.log('Updated Input: ' + input);
+
+    setProbabilityTable();
 }
 
+function setProbabilityTable(){
+
+    checkInput();
+    prob = {
+        a : [0, widtha],
+        b : [widtha, widthb],
+        c : [widtha + widthb, widthc],
+        d : [widtha + widthb + widthc, widthd],
+        '@' : [0.9, 0.1]
+    }
+
+}
+
+function checkInput(){
+
+}
 
 function encode(str, prob){
     console.log('Encode String: ' + str);

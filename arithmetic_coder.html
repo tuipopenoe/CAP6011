@@ -21,10 +21,95 @@
                     of the characters 'a', 'b', 'c', or 'd', and press
                     Compress to encode and decode them.
                 </p>
+                <div class='table-responsive'>
+                    <table class='table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                Character Probability Table
+                            </tr>
+                            <tr>
+                                <th>
+                                    Character
+                                </th>
+                                <th>
+                                    Start
+                                </th>
+                                <th>
+                                    Width
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type ='text' value='a'
+                                    class='input-group' id='a'>
+                                </td>
+                                <td>
+                                    <span id='starta'>0</span>
+                                </td>
+                                <td>
+                                    <input type='text' value=0.3
+                                    class='input-group' id='widtha'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type='text' value='b'
+                                    class='input-group' id='b'>
+                                </td>
+                                <td>
+                                    <span id='startb'>.3</span>
+                                </td>
+                                <td>
+                                    <input type='text' value=0.2
+                                        class='input-group' id='widthb'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type='text' value='c'
+                                    class='input-group' id='c'>
+                                </td>
+                                <td>
+                                    <span id='startc'>0.5</span>
+                                </td>
+                                <td>
+                                    <input type='text' value=0.2
+                                        class='input-group' id='widthc'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type='text' value='d'
+                                        class='input-group' id='d'>
+                                </td>
+                                <td>
+                                    <span id='startd'>0.7</span>
+                                </td>
+                                <td>
+                                    <input type='text' value=0.2
+                                        class='input-group' id='widthd'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span>'@'</span>
+                                </td>
+                                <td>
+                                    <span>0.9</span>
+                                </td>
+                                <td>
+                                    <span>0.1</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <p>
                     <input type='text' placeholder='Input String'
                     class='input-group-lg' id='stringInput'
-                    onchange='updateInput()'>
+                    style='width:500px' onchange='updateInput()'>
                 </p>
                 <p>
                     <a class='btn btn-lg btn-success'
