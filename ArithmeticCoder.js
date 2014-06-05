@@ -12,6 +12,13 @@ var char3;
 var char4;
 var char5;
 
+// Store the starting values
+var start1;
+var start2;
+var start3;
+var start4;
+var start5;
+
 // Stores the widths of each character on the table;
 var width1;
 var width2;
@@ -38,6 +45,8 @@ function compress(){
     updateInput();
 
     validateInput();
+
+    computeProbability();
 
     setProbabilityTable();
 
@@ -75,14 +84,13 @@ function updateInput(){
 
 function setProbabilityTable(){
     validateInput();
-    computeProbability();
     // Set the probability table to the new values
     prob = {};
-    prob[char1] = [0, width1];
-    prob[char2] = [width1, width2],
-    prob[char3] = [width1 + width2, width3];
-    prob[char4] = [width1 + width2 + width3, width4];
-    prob[char5] = [width1 + width2 + width3 + width4, width5];
+    prob[char1] = [start1, width1];
+    prob[char2] = [start2, width2],
+    prob[char3] = [start3, width3];
+    prob[char4] = [start4, width4];
+    prob[char5] = [start5, width5];
 };
 
 function computeProbability(){
@@ -117,11 +125,27 @@ function computeProbability(){
     width4 = fourCount / input.length;
     width5 = 1 / input.length;
 
-    document.getElementById('width1').value = width1;
-    document.getElementById('width2').value = width2;
-    document.getElementById('width3').value = width3;
-    document.getElementById('width4').value = width4;
-    document.getElementById('width5').value = width5;
+    start1 = 0;
+    start2 = width1;
+    start3 = width1 + width2;
+    start4 = width1 + width2 + width3;
+    start5 = width1 + width2 + width3 + width4;
+
+    updateTableInfo();
+};
+
+function updateTableInfo(){
+    document.getElementById('width1').innerHTML = width1;
+    document.getElementById('width2').innerHTML = width2;
+    document.getElementById('width3').innerHTML = width3;
+    document.getElementById('width4').innerHTML = width4;
+    document.getElementById('width5').innerHTML = width5;
+
+    document.getElementById('start1').innerHTML = start1;
+    document.getElementById('start2').innerHTML = start2;
+    document.getElementById('start3').innerHTML = start3;
+    document.getElementById('start4').innerHTML = start4;
+    document.getElementById('start5').innerHTML = start5;
 };
 
 // Validate input in the input string and probability table
@@ -149,9 +173,12 @@ function encode(str, prob){
 
         start += d_start*width;
         console.log(start);
-        output = '<p>' + str.charAt(i) + '</p><p>Start: ' + start + '</p>';
+        output = '<p> Character at ' + i +': ' + str.charAt(i) +
+            '</p><p>Start: ' + start + '</p>';
         append(output, 3);
         width *= d_width;
+        output = '<p> Interval Width: ' + width + '</p>';
+        append(output, 3);
     }
 
     var encoded_value = getRandomUniform(start, start + width);
