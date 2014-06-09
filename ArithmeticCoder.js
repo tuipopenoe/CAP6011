@@ -150,7 +150,48 @@ function updateTableInfo(){
 
 // Validate input in the input string and probability table
 function validateInput(){
-    // TODO:
+
+    if(char1 == null || char1 == NaN || char1 == undefined || char1.length >1
+        || char1.length == 0){
+        char1 = prompt("Enter a valid character for character1: ", "");
+    }
+    if(char2 == null || char2 == NaN || char2 == undefined || char2.length >1
+        || char2.length == 0){
+        char2 = prompt("Enter a valid character for character2: ", "");
+    }
+    if(char3 == null || char3 == NaN || char3 == undefined || char3.length >1
+        || char3.length == 0){
+        char3 = prompt("Enter a valid character for character3: ", "");
+    }
+    if(char4 == null || char4 == NaN || char4 == undefined || char4.length >1
+        || char4.length == 0){
+        char4 = prompt("Enter a valid character for character4: ", "");
+    }
+    if(char5 == null || char5 == NaN || char5 == undefined || char5.length >1
+        || char5.length == 0){
+        char5 = prompt("Enter a valid character for character5: ", "");
+    }
+
+    for(var i in input){
+        if(input.charAt(i) == char1){
+
+        }
+        else if(input.charAt(i) == char2){
+
+        }
+        else if(input.charAt(i) == char3){
+
+        }
+        else if(input.charAt(i) == char4){
+
+        }
+        else if(input.charAt(i) == char5){
+
+        }
+        else{
+            alert('Invalid character detected in input, character will be ignored');
+        }
+    }
 }
 
 // Encode the string according to the probability table
