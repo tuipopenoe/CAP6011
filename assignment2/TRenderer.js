@@ -16,10 +16,7 @@ function update(){
 }
 
 function resetVal(){
-    document.getElementById('reflectance').checked = true;
-    document.getElementById('directionalLight').checked = true;
     document.getElementById('pointLight').checked = true;
-    document.getElementById('ambientLight').checked = true;
     document.getElementById('angle').value = 0;
     document.getElementById('rotateX1').value = 0;
     document.getElementById('rotateX2').value = 0;
@@ -30,9 +27,9 @@ function resetVal(){
     document.getElementById('translateX').value = 0;
     document.getElementById('translateY').value = 0;
     document.getElementById('translateZ').value = 0;
-    document.getElementById('scaleX').value = 0;
-    document.getElementById('scaleY').value = 0;
-    document.getElementById('scaleZ').value = 0;
+    document.getElementById('scaleX').value = 1;
+    document.getElementById('scaleY').value = 1;
+    document.getElementById('scaleZ').value = 1;
 
     document.DrawGraphic.UPDATE();
 }

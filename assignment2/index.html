@@ -57,11 +57,11 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type='radio' name='objectRadio1' id='objectRadio1' checked /> Shape1 
+                                <td><input type='radio' name='objectRadio' id='objectRadio1' checked /> Shape1 
                                 </td>
-                                <td><input type='radio' name='pointLight' id='pointLight' checked /> Point 
+                                <td><input type='radio' name='lightRadio' id='pointLight' checked /> Point 
                                 </td>
-                                <td><input type='radio' name='Radio1' id='shapeRadio1' checked/> Flat 
+                                <td><input type='radio' name='shapeRadio' id='shapeRadio1' checked/> Flat 
                                 </td>
                                 <td>Specular <input type='checkbox' 
                                     name='reflectance' id='reflectance'/>
@@ -77,15 +77,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type='radio' name='objectRadio2' id='objectRadio2'> Shape2
+                                <td><input type='radio' name='objectRadio' id='objectRadio2'> Shape2
                                 </td>
-                                <td><input type='radio' name='ambientLight' id='ambientLight'> Ambient 
+                                <td><input type='radio' name='lightRadio' id='ambientLight'> Ambient 
                                 </td>
-                                <td><input type='radio' name='shapeRadio1' id='shapeRadio1'> Goraud
+                                <td><input type='radio' name='shapeRadio' id='shapeRadio1'> Goraud
                                 </td>
                                 <td>
                                 </td>
-                                <td>Y-Axis <input type='text' class='input input-small' name='scaleY' id='scaleY' value='0'>
+                                <td>Y-Axis <input type='text' class='input input-small' name='scaleY' id='scaleY' value='1'>
                                 </td>
                                 <td>Y-Axis <input type='text' class='input input-small' name='translateY' id='translateY' value='0'/>
                                 <td>
@@ -95,24 +95,24 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type='radio' name='objectRadio3' id='objectRadio3'> Shape3
+                                <td><input type='radio' name='objectRadio' id='objectRadio3'> Shape3
                                 </td>
-                                <td><input type='radio' name='directionalLight' id='directionalLight'> Directional
-                                </td>
-                                <td>
+                                <td><input type='radio' name='lightRadio' id='directionalLight'> Directional
                                 </td>
                                 <td>
                                 </td>
-                                <td>Z-Axis <input type='text' class='input input-small' name='scaleZ' id='scaleZ' value='0'/>
+                                <td>
+                                </td>
+                                <td>Z-Axis <input type='text' class='input input-small' name='scaleZ' id='scaleZ' value='1'/>
                                 </td>
                                 <td>Z-Axis <input type='text' class='input input-small' name='translateZ' id='translateZ' value='0'/>
                                 </td>
-                                <td>Z1 <input type='text' class='input input-small' name='rotateZ1' id='rotateZ1' value='0' checked/>
-                                Z2 <input type='text' class='input input-small' name='rotateZ2' id='rotateZ2' value='0' checked/>
+                                <td>Z1 <input type='text' class='input input-small' name='rotateZ1' id='rotateZ1' value='1' checked/>
+                                Z2 <input type='text' class='input input-small' name='rotateZ2' id='rotateZ2' value='-1' checked/>
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type='radio' name='objectRadio4' id='objectRadio4'> Shape4 
+                                <td><input type='radio' name='objectRadio' id='objectRadio4'> Shape4 
                                 </td>
                                 <td>
                                 </td>
@@ -134,8 +134,34 @@
                     </div>
                 </div>
                 <div>
-                    <applet code='Tri3D.class' width = '256' height ='256'>
-                        <!-- <param name='datafile' value='cow.obj'> -->
+                    <!-- Import deployJava.js -->
+                    <script src='https://www.java.com/js/deployJava.js'>
+                    </script>
+                    <!-- Create applet programmatically -->
+                    <script>
+                        /*var attributes = {
+                            id: 'DrawGraphic',
+                            code: 'DrawGraphic.class',
+                            width: 256,
+                            height: 256
+                        };
+
+                        var parameters = { 
+                            name: 'objectFile',
+                            value: 'Cow.obj',
+                        }
+                        deployJava.runApplet(attributes, parameters, '1.7');*/
+                    </script>
+                    <!-- Create applet inline -->
+                    <applet 
+                        code='DrawGraphic.class' 
+                        codebase = '../assignment2/'
+                        name='DrawGraphic'
+                        align='center'
+                        width='256'
+                        height='256'>
+                        <param name='objectFile' value='Cow.obj'>
+                        <b> Java Required to view this object </b>
                     </applet>
                 </div>
             </div>

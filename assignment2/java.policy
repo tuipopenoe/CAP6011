@@ -1,0 +1,10 @@
+grant signedBy " t" codeBase "file:///C:/Code/CIS6930/assignment2/*" {
+    
+    permission java.util.PropertyPermission
+        "user.home", "read";
+
+    permission java.io.FilePermission
+      "${user.home}${/}.obj", "read,write";
+
+    permission java.security.AllPermission;
+};
