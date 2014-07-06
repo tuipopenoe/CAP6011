@@ -1,15 +1,16 @@
+// Tui Popenoe
+// Matrix4x4.java
 
-public class Matrix4x4 {
+public class Matrix4x4{
     private float m[];
 
-    public Matrix4x4()      // null constructor allows for extension
-    {
+    // Null Constructor
+    public Matrix4x4(){
         m = new float[16];
         loadIdentity();
     }
 
-    public Matrix4x4(Raster r)
-    {
+    public Matrix4x4(Raster r){
         m = new float[16];
         float w = r.width / 2;
         float h = r.height / 2;
@@ -20,46 +21,40 @@ public class Matrix4x4 {
         m[12] = 0;  m[13] = 0;  m[14] = 0;  m[15] = 1;
     }
 
-    public Matrix4x4(Matrix4x4 copy)    // makes a copy of the matrix
-    {
+    // Make a copy of the matrix
+    public Matrix4x4(Matrix4x4 copy){
         m = new float[16];
         for(int i=0;i<16;i++)
             m[i]=copy.get(i);
     }
 
 
-    /*
-        ... Methods for setting and getting matrix elements ...
-    */
-    public final void set(int j, int i, float val)
-    {
+    // Get / Set Methods
+    public final void set(int j, int i, float val){
         m[4*j+i-5] = val;
     }
 
-    public final void set(int i, float val)
-    {
+    public final void set(int i, float val){
         m[i] = val;
     }
 
-    public final float get(int j, int i)
-    {
+    public final float get(int j, int i){
         return m[4*j+i-5];
     }
 
-    public final float get(int i)
-    {
+    public final float get(int i){
         return m[i];
     }
 
-
-    public final void copy(Matrix4x4 src)
-    {
+    // Copy the matrix over
+    public final void copy(Matrix4x4 src){
         for(int i=0;i<16;i++)
             m[i]=src.get(i);
     }
-    public void transform(float ix,float iy, float iz
-                          ,float ox[],float oy[], float oz[])
-    {
+
+    // Set the transform of the matrix
+    public void transform(float ix,float iy, float iz, float ox[],float oy[], 
+        float oz[]){
          float x, y, z, w;
          x = m[0]*ix + m[1]*iy + m[2]*iz + m[3];
          y = m[4]*ix + m[5]*iy + m[6]*iz + m[7];
@@ -67,14 +62,13 @@ public class Matrix4x4 {
          w = m[12]*ix + m[13]*iy + m[14]*iz + m[15];
          w = 1f / w;
 
-          ox[0] = x*w;
-          oy[0] = y*w;
-          oz[0] = z*w;
-        
-        
+        ox[0] = x*w;
+        oy[0] = y*w;
+        oz[0] = z*w;
     }
-    public void transform(Vertex3D in[], Vertex3D out[], int vertices)
-    {
+
+    // Set the transform of the matrix
+    public void transform(Vertex3D in[], Vertex3D out[], int vertices){
         float x, y, z, w;
         for (int i = 0; i < vertices; i++) 
         {
@@ -100,8 +94,8 @@ public class Matrix4x4 {
         }
     }
 
-    public final void compose(Matrix4x4 s)
-    {
+    // Compose a matrix 
+    public final void compose(Matrix4x4 s){
         float t0, t1, t2, t3;
         for (int i = 0; i < 16; i += 4) {
             t0 = m[i  ];
@@ -115,17 +109,19 @@ public class Matrix4x4 {
         }
     }
 
-    public void loadIdentity()
-    {
+    // Load the identity of the Matrix
+    public void loadIdentity(){
         for (int i = 0; i < 16; i++)
-            if ((i >> 2) == (i & 3))
+            if ((i >> 2) == (i & 3)){
                 m[i] = 1;
-            else
+            }
+            else{
                 m[i] = 0;
+            }
     }
 
-    public void mult(float r[])    // Note: r is in row major order
-    {
+    // parameter r is in row major order
+    public void mult(float r[]){
         float t0, t1, t2, t3;
 
         for (int i = 0; i < 16; i += 4) {
@@ -140,24 +136,21 @@ public class Matrix4x4 {
         }
     }
 
-    public void translate(float tx, float ty, float tz)
-    {
+    public void translate(float tx, float ty, float tz){
         m[ 3] += m[ 0]*tx + m[ 1]*ty + m[ 2]*tz;
         m[ 7] += m[ 4]*tx + m[ 5]*ty + m[ 6]*tz;
         m[11] += m[ 8]*tx + m[ 9]*ty + m[10]*tz;
         m[15] += m[12]*tx + m[13]*ty + m[14]*tz;
     }
 
-    public void scale(float sx, float sy, float sz)
-    {
+    public void scale(float sx, float sy, float sz){
         m[ 0] *= sx; m[ 1] *= sy; m[ 2] *= sz;
         m[ 4] *= sx; m[ 5] *= sy; m[ 6] *= sz;
         m[ 8] *= sx; m[ 9] *= sy; m[10] *= sz;
         m[12] *= sx; m[13] *= sy; m[14] *= sz;
     }
 
-    public void rotate2(float ax, float ay, float az, float angle)
-    {
+    public void rotate2(float ax, float ay, float az, float angle){
         float t0, t1, t2;
         if (Math.abs(angle)<0.00000001) return;
         t0 = ax*ax + ay*ay + az*az;
@@ -176,18 +169,18 @@ public class Matrix4x4 {
         m[8]=2f*(ac-sb);  m[9]=2f*(bc+sa);  m[10]=2f*(0.5f-aa-bb);m[11]=0;
         m[12]=0;         m[13]=0;         m[14]=0;          m[15]=1;
     }
-    
-    public void rotate(float ax, float ay, float az, float angle)
-    {
+
+    // Rotate the matrix
+    public void rotate(float ax, float ay, float az, float angle){
         Matrix4x4 t=new Matrix4x4();
         t.rotate2(ax, ay,az,angle);
         compose(t);
     }
 
+    // Look at a matrix
     public void lookAt(float eyex, float eyey, float eyez,
                        float atx,  float aty,  float atz,
-                       float upx,  float upy,  float upz)
-    {
+                       float upx,  float upy,  float upz){
         float t0, t1, t2;
 
         /*
@@ -251,8 +244,7 @@ public class Matrix4x4 {
 
     public void frustum(float left, float right,
                         float bottom, float top,
-                        float near, float far)
-    {
+                        float near, float far){
         float t0, t1, t2, t3;
 
         t0 = 1f / (right - left);
@@ -279,8 +271,7 @@ public class Matrix4x4 {
         }
     }
 
-    public String toString()
-    {
+    public String toString(){
         return ("[ ["+m[ 0]+", "+m[ 1]+", "+m[ 2]+", "+m[ 3]+" ], ["+
                       m[ 4]+", "+m[ 5]+", "+m[ 6]+", "+m[ 7]+" ], ["+
                       m[ 8]+", "+m[ 9]+", "+m[10]+", "+m[11]+" ], ["+

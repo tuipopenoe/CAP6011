@@ -3,6 +3,7 @@
 
 import java.awt.*;
 import java.applet.*;
+
 public class DrawGraphic extends Applet{
     Scene world;
 
@@ -21,8 +22,8 @@ public class DrawGraphic extends Applet{
     }
 
     public static float ConvertToFloat(String s){
-            Float FloatVal=new Float(s);
-            return FloatVal.floatValue();
+        Float FloatVal=new Float(s);
+        return FloatVal.floatValue();
     }
 
     public void DirectionalLightVal (boolean s){
@@ -48,19 +49,18 @@ public class DrawGraphic extends Applet{
     public void GouraudShapeVal(boolean s){
         GouraudShape = s;
         world.setReflect(Reflectance);
-                world.setRenderMode(TriDObject.Gouraud);
+        world.setRenderMode(TriDObject.Gouraud);
     }
 
     public void FlatShapeVal(boolean s){
         FlatShape = s;
         world.setReflect(Reflectance);
-            world.setRenderMode(TriDObject.Flat);
+        world.setRenderMode(TriDObject.Flat);
     }
 
     public void angleVal(String s){
         angle = ConvertToFloat(s);
         angle=(float)(angle*Math.PI/180.);
-        
     }
 
     public void rotateX1Val(String s){
@@ -105,7 +105,7 @@ public class DrawGraphic extends Applet{
 
     public void scaleYVal(String s){
         scaleY=ConvertToFloat(s);
-        }
+    }
 
     public void scaleZVal(String s){
         scaleZ=ConvertToFloat(s);
@@ -113,15 +113,18 @@ public class DrawGraphic extends Applet{
 
     public Matrix4x4 DetectObjMatrix(){
         Matrix4x4 ObjModel=new Matrix4x4();
-        if(Math.abs(scaleX)<0.000001 && Math.abs(scaleY)<0.000001 && Math.abs(scaleZ)<0.000001){
-            showStatus( "Invaild Scaling Coefficient, please enter again!");
-            return ObjModel;   
+        if(Math.abs(scaleX) < 0.000001 && Math.abs(scaleY) < 0.000001 && 
+            Math.abs(scaleZ) < 0.000001){
+            showStatus("Invaild Scaling Coefficient, please enter again!");
+            return ObjModel;
         }
         ObjModel.translate(rotateX1, rotateY1, rotateZ1);
-        ObjModel.rotate(rotateX2-rotateX1, rotateY2-rotateY1, rotateZ2-rotateZ1,angle);
+        ObjModel.rotate(rotateX2-rotateX1, rotateY2-rotateY1, 
+            rotateZ2-rotateZ1,angle);
         ObjModel.translate(-rotateX1, -rotateY1, -rotateZ1);
         ObjModel.translate(translateX,translateY, translateZ);
         ObjModel.scale(scaleX, scaleY, scaleZ);
+
         return ObjModel;
     }
 
@@ -143,13 +146,10 @@ public class DrawGraphic extends Applet{
         else{
             showStatus(filename+" is successfully loaded!");
         }
-        // to do: code goes here.
-        //{{CONNECTION
-        // Repaint the Applet
 
         Render3D.bAmbientLight=true;
         Render3D.bDirectionalLight=true;
-            Render3D.bPointLight=true;
+        Render3D.bPointLight=true;
         world.setReflect(true);
     }
 
@@ -158,7 +158,6 @@ public class DrawGraphic extends Applet{
 
     public void init()
     {
-        //{{INIT_CONTROLS
         setLayout(null);
         setSize(300,380);
         setBackground(new Color(12632256));
@@ -173,31 +172,27 @@ public class DrawGraphic extends Applet{
         String filename = getParameter("objectfile");
         ObjectName = getParameter("objectfile");
         showStatus("Loading "+filename+ "please wait!");
-        if(!world.FileOpen(getDocumentBase(),filename))
-            showStatus("Error loading "+filename);
-        else     
-            showStatus(filename+" is successfully loaded");
-            
 
-        //{{REGISTER_LISTENERS
+        if(!world.FileOpen(getDocumentBase(),filename)){
+            showStatus("Error loading "+filename);
+        }
+        else{
+            showStatus(filename+" is successfully loaded");
+        }
+
         SymMouse aSymMouse = new SymMouse();
         SymAction lSymAction = new SymAction();
-           //}}
+
         Reset();
     }
 
-
-    //{{DECLARE_CONTROLS
     java.awt.Panel panel1;
-    
-    
 
     class SymMouse extends java.awt.event.MouseAdapter{
         public void mouseClicked(java.awt.event.MouseEvent event){
             Object object = event.getSource();
         }
     }
-
 
     class SymAction implements java.awt.event.ActionListener{
         public void actionPerformed(java.awt.event.ActionEvent event){
