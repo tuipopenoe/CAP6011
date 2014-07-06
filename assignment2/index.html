@@ -25,7 +25,8 @@
             <div class='jumbotron'>
                 <h1>TRenderer</h1>
                 <p class='lead'>
-
+                    <button type='button' class='btn btn-xlarge btn-success' onclick='passVal()'>Reset</button>
+                    <button type='button' class='btn btn-xlarge btn-success' onclick ='resetVal(); update(); passVal();'>Update Drawing</button>
                 </p>
                 <div class='table-responsive'>
                     <table class='table table-bordered table-striped'>
@@ -56,19 +57,22 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type='radio' name='objectRadio1' id='objectRadio1' checked> Shape1 
+                                <td><input type='radio' name='objectRadio1' id='objectRadio1' checked /> Shape1 
                                 </td>
-                                <td><input type='radio' name='lightRadio1' id='lightRadio1'> Point 
+                                <td><input type='radio' name='lightRadio1' id='lightRadio1' checked /> Point 
                                 </td>
-                                <td><input type='radio' name='Radio1' id='shapeRadio1'> Flat 
+                                <td><input type='radio' name='Radio1' id='shapeRadio1' checked/> Flat 
                                 </td>
-                                <td>Specular <input type='checkbox' name='specular' id='specular' />
+                                <td>Specular <input type='checkbox' name='specular' id='specular'/>
                                 </td>
-                                <td>X-Axis <input type='text' class='input input-small' name='scalingX' />
+                                <td>X-Axis <input type='text' class='input input-small' name='scalingX' id='scalingX' value='1' checked/>
                                 </td>
-                                <td>X-Axis <input type='text' class='input input-small' name='translationalX' />
+                                <td>X-Axis <input type='text' class='input input-small' name='translationalX' id='translationalX' value='0' checked/>
                                 </td>
-                                <td>X-Axis <input type='text' class='input input-small' name='rotationalX' />
+                                <td>
+                                    <span>X1 <input type='text' class='input input-small' name='rotationalX1' id='rotationalX1' value='0' checked/>
+                                X2 <input type='text' class='input input-small' name='rotationalX2' id='rotationalX2' value='0' checked/>
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
@@ -80,11 +84,13 @@
                                 </td>
                                 <td>
                                 </td>
-                                <td>Y-Axis <input type='text' class='input input-small' name='scalingY' id='scalingY'>
+                                <td>Y-Axis <input type='text' class='input input-small' name='scalingY' id='scalingY' value='0'>
                                 </td>
-                                <td>Y-Axis <input type='text' class='input input-small' name='translationalY' id='translationalY'>
-                                </td>
-                                <td>Y-Axis <input type='text' class='input input-small' name='rotationalY' id='rotationalY'>
+                                <td>Y-Axis <input type='text' class='input input-small' name='translationalY' id='translationalY' value='0'/>
+                                <td>
+                                    <span>Y1 <input type='text' class='input input-small' name='rotationalY1' id='rotationalY1' value='0' checked/>
+                                    Y2 <input type='text' class='input input-small' name='rotationalY2' id='rotationalY2' value='0' checked/>
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
@@ -96,11 +102,12 @@
                                 </td>
                                 <td>
                                 </td>
-                                <td>Z-Axis <input type='text' class='input input-small' name='scalingZ' id='scalingZ'/>
+                                <td>Z-Axis <input type='text' class='input input-small' name='scalingZ' id='scalingZ' value='0'/>
                                 </td>
-                                <td>Z-Axis <input type='text' class='input input-small' name='translationalZ' id='translationalZ' />
+                                <td>Z-Axis <input type='text' class='input input-small' name='translationalZ' id='translationalZ' value='0'/>
                                 </td>
-                                <td>Z-Axis <input type='text' class='input input-small'name='translationalZ' id='rotationalZ' />
+                                <td>Z1 <input type='text' class='input input-small' name='rotationalZ1' id='rotationalZ1' value='0' checked/>
+                                Z2 <input type='text' class='input input-small' name='rotationalXZ2' id='rotationalZ2' value='0' checked/>
                                 </td>
                             </tr>
                             <tr>
@@ -116,16 +123,16 @@
                                 </td>
                                 <td>
                                 </td>
-                                <td>
+                                <td>Angle <input type='text' class='input input-small' name='angle' id='angle' value='0'>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     </div>
                 </div>
-            </div>
-            <div class='jumbotron'>
-                <applet code='DrawGraphic.class' width = '256' height = '256'>
+                <div>
+                    <applet code=DrawGraphic.class width = '256' height ='256'>
+                </div>
             </div>
         <div>
     </body>
