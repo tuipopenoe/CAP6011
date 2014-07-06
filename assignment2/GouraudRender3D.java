@@ -1,3 +1,5 @@
+// Tui Popenoe
+// GouraudRender3D.java
 
 class PlaneEqn3
 {

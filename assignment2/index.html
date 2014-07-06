@@ -10,6 +10,8 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type ='text/javascript' src='TRenderer.js'></script>
+        <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
+        <link rel='stylesheet' href='renderer.css'>
         <link rel='stylesheet' href='jumbotron-narrow.css'>
         <title>
             CIS 6930 Assignment 2
@@ -20,24 +22,111 @@
             <div class='header'>
                 <h3 class='text-muted'>tui popenoe</h3>
             </div>
-        <div class='jumbotron'>
-            <h1>TRenderer</h1>
-            <p class='lead'>
+            <div class='jumbotron'>
+                <h1>TRenderer</h1>
+                <p class='lead'>
 
-            </p>
-            <div class='table-responsive'>
-                <table class='table table-bordered table-striped'>
-                    <thead>
-                        <tr>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                </p>
+                <div class='table-responsive'>
+                    <table class='table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                <td>
+                                    Object
+                                </td>
+                                <td>
+                                    Light Source
+                                </td>
+                                <td>
+                                    Shape
+                                </td>
+                                <td>
+                                    Reflectance
+                                </td>
+                                <td>
+                                    Scaling
+                                </td>
+                                <td>
+                                    Translational
+                                </td>
+                                <td>
+                                    Rotational
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type='radio' name='objectRadio1' id='objectRadio1' checked> Shape1 
+                                </td>
+                                <td><input type='radio' name='lightRadio1' id='lightRadio1'> Point 
+                                </td>
+                                <td><input type='radio' name='Radio1' id='shapeRadio1'> Flat 
+                                </td>
+                                <td>Specular <input type='checkbox' name='specular' id='specular' />
+                                </td>
+                                <td>X-Axis <input type='text' class='input input-small' name='scalingX' />
+                                </td>
+                                <td>X-Axis <input type='text' class='input input-small' name='translationalX' />
+                                </td>
+                                <td>X-Axis <input type='text' class='input input-small' name='rotationalX' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type='radio' name='objectRadio2' id='objectRadio2'> Shape2
+                                </td>
+                                <td><input type='radio' name='lightRadio1' id='lightRadio1'> Ambient 
+                                </td>
+                                <td><input type='radio' name='shapeRadio1' id='shapeRadio1'> Goraud
+                                </td>
+                                <td>
+                                </td>
+                                <td>Y-Axis <input type='text' class='input input-small' name='scalingY' id='scalingY'>
+                                </td>
+                                <td>Y-Axis <input type='text' class='input input-small' name='translationalY' id='translationalY'>
+                                </td>
+                                <td>Y-Axis <input type='text' class='input input-small' name='rotationalY' id='rotationalY'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type='radio' name='objectRadio3' id='objectRadio3'> Shape3
+                                </td>
+                                <td><input type='radio' name='lightRadio1' id='lightRadio1'> Directional
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>Z-Axis <input type='text' class='input input-small' name='scalingZ' id='scalingZ'/>
+                                </td>
+                                <td>Z-Axis <input type='text' class='input input-small' name='translationalZ' id='translationalZ' />
+                                </td>
+                                <td>Z-Axis <input type='text' class='input input-small'name='translationalZ' id='rotationalZ' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type='radio' name='objectRadio4' id='objectRadio4'> Shape4 
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
             </div>
-        </div>
-    
-        <applet code='DrawGraphic.class' width = '256' height = '256'>
+            <div class='jumbotron'>
+                <applet code='DrawGraphic.class' width = '256' height = '256'>
+            </div>
+        <div>
     </body>
 </html>
