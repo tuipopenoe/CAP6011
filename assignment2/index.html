@@ -59,55 +59,56 @@
                             <tr>
                                 <td><input type='radio' name='objectRadio1' id='objectRadio1' checked /> Shape1 
                                 </td>
-                                <td><input type='radio' name='lightRadio1' id='lightRadio1' checked /> Point 
+                                <td><input type='radio' name='pointLight' id='pointLight' checked /> Point 
                                 </td>
                                 <td><input type='radio' name='Radio1' id='shapeRadio1' checked/> Flat 
                                 </td>
-                                <td>Specular <input type='checkbox' name='reflectance' id='reflectance'/>
+                                <td>Specular <input type='checkbox' 
+                                    name='reflectance' id='reflectance'/>
                                 </td>
-                                <td>X-Axis <input type='text' class='input input-small' name='scalingX' id='scalingX' value='1' checked/>
+                                <td>X-Axis <input type='text' class='input input-small' name='scaleX' id='scaleX' value='1' checked/>
                                 </td>
-                                <td>X-Axis <input type='text' class='input input-small' name='translationalX' id='translationalX' value='0' checked/>
+                                <td>X-Axis <input type='text' class='input input-small' name='translateX' id='translateX' value='0' checked/>
                                 </td>
                                 <td>
-                                    <span>X1 <input type='text' class='input input-small' name='rotationalX1' id='rotationalX1' value='0' checked/>
-                                X2 <input type='text' class='input input-small' name='rotationalX2' id='rotationalX2' value='0' checked/>
+                                    <span>X1 <input type='text' class='input input-small' name='rotateX1' id='rotateX1' value='0' checked/>
+                                X2 <input type='text' class='input input-small' name='rotateX2' id='rotateX2' value='0' checked/>
                                     </span>
                                 </td>
                             </tr>
                             <tr>
                                 <td><input type='radio' name='objectRadio2' id='objectRadio2'> Shape2
                                 </td>
-                                <td><input type='radio' name='lightRadio1' id='lightRadio1'> Ambient 
+                                <td><input type='radio' name='ambientLight' id='ambientLight'> Ambient 
                                 </td>
                                 <td><input type='radio' name='shapeRadio1' id='shapeRadio1'> Goraud
                                 </td>
                                 <td>
                                 </td>
-                                <td>Y-Axis <input type='text' class='input input-small' name='scalingY' id='scalingY' value='0'>
+                                <td>Y-Axis <input type='text' class='input input-small' name='scaleY' id='scaleY' value='0'>
                                 </td>
-                                <td>Y-Axis <input type='text' class='input input-small' name='translationalY' id='translationalY' value='0'/>
+                                <td>Y-Axis <input type='text' class='input input-small' name='translateY' id='translateY' value='0'/>
                                 <td>
-                                    <span>Y1 <input type='text' class='input input-small' name='rotationalY1' id='rotationalY1' value='0' checked/>
-                                    Y2 <input type='text' class='input input-small' name='rotationalY2' id='rotationalY2' value='0' checked/>
+                                    <span>Y1 <input type='text' class='input input-small' name='rotateY1' id='rotateY1' value='0' checked/>
+                                    Y2 <input type='text' class='input input-small' name='rotateY2' id='rotateY2' value='0' checked/>
                                     </span>
                                 </td>
                             </tr>
                             <tr>
                                 <td><input type='radio' name='objectRadio3' id='objectRadio3'> Shape3
                                 </td>
-                                <td><input type='radio' name='lightRadio1' id='lightRadio1'> Directional
+                                <td><input type='radio' name='directionalLight' id='directionalLight'> Directional
                                 </td>
                                 <td>
                                 </td>
                                 <td>
                                 </td>
-                                <td>Z-Axis <input type='text' class='input input-small' name='scalingZ' id='scalingZ' value='0'/>
+                                <td>Z-Axis <input type='text' class='input input-small' name='scaleZ' id='scaleZ' value='0'/>
                                 </td>
-                                <td>Z-Axis <input type='text' class='input input-small' name='translationalZ' id='translationalZ' value='0'/>
+                                <td>Z-Axis <input type='text' class='input input-small' name='translateZ' id='translateZ' value='0'/>
                                 </td>
-                                <td>Z1 <input type='text' class='input input-small' name='rotationalZ1' id='rotationalZ1' value='0' checked/>
-                                Z2 <input type='text' class='input input-small' name='rotationalXZ2' id='rotationalZ2' value='0' checked/>
+                                <td>Z1 <input type='text' class='input input-small' name='rotateZ1' id='rotateZ1' value='0' checked/>
+                                Z2 <input type='text' class='input input-small' name='rotateZ2' id='rotateZ2' value='0' checked/>
                                 </td>
                             </tr>
                             <tr>
@@ -123,7 +124,9 @@
                                 </td>
                                 <td>
                                 </td>
-                                <td>Angle <input type='text' class='input input-small' name='angle' id='angle' value='0'>
+                                <td>Angle <input type='text' class='input 
+                                    input-small' name='angle' id='angle' 
+                                    value='0'>
                                 </td>
                             </tr>
                         </tbody>
@@ -131,7 +134,9 @@
                     </div>
                 </div>
                 <div>
-                    <applet code='DrawGraphic.class' name='DrawGraphic' width = '256' height ='256'>
+                    <applet code='Tri3D.class' width = '256' height ='256'>
+                        <!-- <param name='datafile' value='cow.obj'> -->
+                    </applet>
                 </div>
             </div>
         <div>

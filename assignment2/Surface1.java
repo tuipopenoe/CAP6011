@@ -1,3 +1,5 @@
+// Tui Popenoe
+// Surface1.java
 
 class Surface1 {
     public float r, g, b;
