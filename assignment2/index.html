@@ -11,8 +11,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type ='text/javascript' src='TRenderer.js'></script>
         <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
-        <link rel='stylesheet' href='renderer.css'>
-        <link rel='stylesheet' href='jumbotron-narrow.css'>
+        <link rel='stylesheet' href='TRenderer.css'>
         <title>
             CIS 6930 Assignment 2
         </title>
@@ -57,7 +56,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type='radio' name='objectRadio' id='objectRadio1' checked /> Cow 
+                                <td><input type='radio' name='objectRadio' id='cow' checked /> Cow 
                                 </td>
                                 <td><input type='radio' name='lightRadio' id='pointLight' checked /> Point 
                                 </td>
@@ -77,7 +76,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type='radio' name='objectRadio' id='objectRadio2'> Banana
+                                <td><input type='radio' name='objectRadio' id='banana'> Banana
                                 </td>
                                 <td><input type='radio' name='lightRadio' id='ambientLight'> Ambient 
                                 </td>
@@ -95,7 +94,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type='radio' name='objectRadio' id='objectRadio3'> T-Rex
+                                <td><input type='radio' name='objectRadio' id='trex'> T-Rex
                                 </td>
                                 <td><input type='radio' name='lightRadio' id='directionalLight'> Directional
                                 </td>
@@ -112,7 +111,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type='radio' name='objectRadio' id='objectRadio4'> Android 
+                                <td><input type='radio' name='objectRadio' id='android'> Android 
                                 </td>
                                 <td>
                                 </td>
@@ -130,7 +129,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><input type='radio' name='objectRadio' id='objectRadio5'> Ferrari
+                                <td><input type='radio' name='objectRadio' id='ferrari'> Ferrari
                                 </td>
                                 <td>
                                 </td>
@@ -150,33 +149,16 @@
                     </div>
                 </div>
                 <div>
-                    <!-- Import deployJava.js -->
-                    <script src='https://www.java.com/js/deployJava.js'>
-                    </script>
-                    <!-- Create applet programmatically -->
-                    <script>
-                        /*var attributes = {
-                            id: 'DrawGraphic',
-                            code: 'DrawGraphic.class',
-                            width: 256,
-                            height: 256
-                        };
-
-                        var parameters = { 
-                            name: 'objectFile',
-                            value: 'Cow.obj',
-                        }
-                        deployJava.runApplet(attributes, parameters, '1.7');*/
-                    </script>
-                    <!-- Create applet inline -->
                     <applet 
+                        type='application/x-java-applet;jpi-version=6'
                         code='DrawGraphic.class' 
-                        codebase = '../assignment2/'
+                        archive='TRenderer.jar'
+                        codebase = './lib'
                         name='DrawGraphic'
                         align='center'
                         width='256'
                         height='256'>
-                        <param name='objectFile' value='Cow.obj'>
+                        <param name='objectFile' value='cow.obj'>
                         <b> Java Required to view this object </b>
                     </applet>
                 </div>
