@@ -62,7 +62,7 @@ public class DrawGraphic extends Applet{
 
     public void angleVal(String s){
         angle = ConvertToFloat(s);
-        angle=(float)(angle*Math.PI/180.);
+        angle=(float)(angle*Math.PI/180.0);
     }
 
     public void rotateX1Val(String s){
@@ -175,7 +175,7 @@ public class DrawGraphic extends Applet{
         ObjectName = getParameter("objectfile");
         showStatus("Loading "+filename+ "please wait!");
 
-        if(!world.FileOpen(getDocumentBase(),filename)){
+        if(!world.FileOpen(getCodeBase(),filename)){
             showStatus("Error loading "+filename);
         }
         else{

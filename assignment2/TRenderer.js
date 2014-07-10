@@ -34,9 +34,11 @@ function resetVal(){
     document.DrawGraphic.UPDATE();
 }
 
-function get3DObject(model){
-    document.DrawGraphic.displayObject(model);
-    document.shape1.checked = true;
+function get3DObject(modelId){
+    document.DrawGraphic.displayObject(modelId + '.obj');
+    console.log(modelId + '.obj');
+    
+    update()
 }
 
 function passVal(){
@@ -66,6 +68,18 @@ function passVal(){
     document.DrawGraphic.scaleZVal(document.getElementById('scaleZ')
         .value);
 
+    reflectancePassVal();
+
+    directionalLightPassVal();
+
+    pointLightPassVal()
+
+    ambientLightPassVal();
+
+    GouraudShapePassVal();
+
+    FlatShapePassVal();
+
     document.DrawGraphic.UPDATE();
 }
 
@@ -91,17 +105,17 @@ function ambientLightPassVal(){
 }
 
 function GouraudShapePassVal(){
-    if(document.shapeRadio2.checked==true){
+    if(document.getElementById('gouraud').checked==true){
         document.DrawGraphic.GouraudShapeVal(
-            document.getElementById('shapeRadio2').checked);
+            document.getElementById('gouraud').checked);
         document.DrawGraphic.UPDATE();
     }
 }
 
 function FlatShapePassVal(){
-    if(document.shapeRadio2.checked==true){
+    if(document.getElementById('flat').checked==true){
         document.DrawGraphic.FlatShapeVal(
-            document.getElementById('shapeRadio1').checked);
+            document.getElementById('flat').checked);
         document.DrawGraphic.UPDATE();
     }
 }
