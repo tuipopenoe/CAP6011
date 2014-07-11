@@ -9,7 +9,6 @@ window.requestAnimationFrame = (function (){
 
 var canvas;
 var device;
-var mesh;
 var meshes = [];
 var mera;
 
@@ -19,7 +18,8 @@ function init(){
     canvas = document.getElementById('frontBuffer');
     mera = new SoftEngine.Camera();
     device = new SoftEngine.Device(canvas);
-    
+    mera.Position = new BABYLON.Vector3(0, 0, 10);
+    mera.Target = new BABYLON.Vector3(0, 0, 0);
     device.LoadJSONFileAsync('monkey.babylon', loadJSONCompleted);
 }
 

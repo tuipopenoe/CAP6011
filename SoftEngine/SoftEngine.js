@@ -75,20 +75,123 @@ var SoftEngine;
             // drawn from top left, so need to transform them.
             var x = point.x * this.workingWidth + this.workingWidth / 2.0 >>0;
             var y = -point.y *this.workingHeight + this.workingHeight /2.0>>0;
-            return (new BABYLON.Vector2(x,y));
+            return (new BABYLON.Vector3(x, y, point.z));
         };
 
         // drawPoint calls putPixel but does clipping operation first
-        Device.prototype.drawPoint = function(point){
+        Device.prototype.drawPoint = function(point, color){
             // Clipping what's visible on screen
             if(point.x >= 0 && point.y >= 0 && point.x < this.workingWidth 
                 && point.y < this.workingHeight){
                 // Drawing a yellow point
-                this.putPixel(point.x,point.y, new BABYLON.Color4(1, 1, 0, 1));
+                this.putPixel(point.x,point.y, color);
             }
         };
 
-        Device.prototype.drawLine = function(point0, point1){
+        // Clamping values to keep them between 0 and 1
+        Device.prototype.clamp = function(value, min, max){
+            if(typeof min === 'undefined'){
+                min = 0;
+            }
+            if(typeof max === 'undefined'){
+                max = 1;
+            }
+            return Math.max(min, Math.min(value, max));
+        }
+
+        // Interpolating the value between 2 vertices
+        // min is the starting point and max the ending point
+        // gradient is the % between the 2 points
+        Device.prototype.interpolate = function(min, max, gradient){
+            return min + (max - min) * this.clamp(gradient);
+        }
+
+        // Drawing line between 2 points from left to right
+        // papb -> pcpd
+        // pa, pb, pc, and pd must then be sorted before
+        Device.prototype.processScanLine = function(y, pa, pb, pc, pd, color){
+            // Using current Y, and gradient to compute other values
+            // if pa.Y == pb.Y or pc.Y == pd.Y, gradient is forced to 1
+            var gradient1 = pa.y != pb.y ? (y - pa.y) / (pb.y - pa.y) : 1;
+            var gradient2 = pc.y != pd.y ? (y - pc.y) / (pd.y - pc.y) : 1;
+
+            var sx = this.interpolate(pa.x, pb.x, gradient1) >> 0;
+            var ex = this.interpolate(pc.x, pd.x, gradient2) >> 0;
+
+            for(var x = sx; x < ex; x++){
+                this.drawPoint(new BABYLON.Vector2(x, y), color);
+            }
+        };
+
+        Device.prototype.drawTriangle = function(p1, p2, p3, color){
+            // Sorting the points in order to always have this order on screen
+            // p1, p2, p3, with p1 always up, then p2 between p1 and p3
+            var temp;
+            if(p1.y > p2.y){
+                temp = p2;
+                p2 = p1;
+                p1 = temp;
+            }
+            if(p2.y > p3.y){
+                temp = p2;
+                p2 = p3;
+                p3 = temp;
+            }
+            if(p1.py > p2.y){
+                temp = p2;
+                p2 = p1;
+                p1 = temp;
+            }
+
+            // Inverse slopes
+            var dP1P2;
+            var dP1P3;
+
+            // Compute slopes
+            if(p2.y - p1.y > 0){
+                dP1P2 = (p2.x - p1.x) / (p2.y - p1.y);
+            }
+            else{
+                dP1P2 = 0;
+            }
+
+            if(p3.y - p1.y > 0){
+                dP1P3 = (p3.x - p1.x) / (p3.y - p1.y);
+            }
+            else{
+                dP1P3 = 0;
+            }
+
+            // P1
+            //    p2
+            // P3
+            if(dP1P2 > dP1P3){
+                for(var y = p1.y >> 0; y <= p3.y >> 0; y++){
+                    if(y < p2.y){
+                        this.processScanLine(y, p1, p3, p1, p2, color);
+                    }
+                    else{
+                        this.processScanLine(y, p1, p3, p2, p3, color);
+                    }
+                }
+            }
+
+            //    P1
+            // P2
+            //    P3
+            else{
+                for(var y = p1.y >> 0; y <= p3.y >> 0; y++){
+                    if(y < p2.y){
+                        this.processScanLine(y, p1, p2, p1, p3, color);
+                    }
+                    else{
+                        this.processScanLine(y, p2, p3, p1, p3, color);
+                    }
+                }
+            }
+        };
+
+        /*Device.prototype.drawLine = function(point0, point1){
             var dist = point1.subtract(point0).length();
 
             // If the distance is less than 2 pixels
@@ -131,7 +234,9 @@ var SoftEngine;
                     y0 += sy;
                 }
             }
-        };
+        };*/
+
+
 
         // The main method of the engine that re-compute each vertex projection
         // during each frame
@@ -164,9 +269,10 @@ var SoftEngine;
                     var pixelB = this.project(vertexB, transformMatrix);
                     var pixelC = this.project(vertexC, transformMatrix);
 
-                    this.drawBline(pixelA, pixelB);
-                    this.drawBline(pixelB, pixelC);
-                    this.drawBline(pixelC, pixelA);
+                    var color = 0.25 + ((indexFaces % cMesh.Faces.length) / 
+                        cMesh.Faces.length * 0.75);
+                    this.drawTriangle(pixelA, pixelB, pixelC, 
+                        new BABYLON.Color4(color, color, color, 1));
                 }
             }
         };
@@ -216,11 +322,11 @@ var SoftEngine;
                 }
 
                 // the number of interesting vertices information for us
-                var verticesCount = verticesArray.length / veticesStep;
+                var verticesCount = verticesArray.length / verticesStep;
 
                 // the number of faces is logically the size of the array
                 // divided by 3 (A, B, C)
-                var facesCount = indices.length / 3;
+                var facesCount = indicesArray.length / 3;
 
                 var mesh = new SoftEngine.Mesh(
                         jsonObject.meshes[meshIndex].name, verticesCount,
