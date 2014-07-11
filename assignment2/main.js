@@ -1,3 +1,13 @@
+var canvas;
+var engine;
+var currentScene;
+var currentObject;
+var currentFPS;
+var divCurrentFPS;
+var previousDate;
+var now;
+var lastFPSValues = new Array(60);
+
 window.requestAnimationFrame = (function (){
     return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
@@ -7,26 +17,33 @@ window.requestAnimationFrame = (function (){
         };
     })();
 
-
-var canvas;
-var engine;
+window.onload = function(){
+    loadScene('banana.babylon');
+}
 
 function init(){
     canvas = document.getElementById('renderCanvas');
     engine = new BABYLON.Engine(canvas, true);
+    divCurrentFPS = document.getElementById('currentFPS');
+    previousDate = Date.now();
 }
 
-window.onload = function(){
+function loadScene(sceneName){
     if (BABYLON.Engine.isSupported()){
         
         init();
 
-        BABYLON.SceneLoader.Load('', 'banana.babylon', engine, 
+        BABYLON.SceneLoader.Load('', sceneName, engine, 
             function(newScene){
                 newScene.executeWhenReady(function(){
-                    newScene.activeCamera.attachControl(canvas);
+
+                    currentScene = newScene;
+                    currentScene.activeCamera.attachControl(canvas);
+                    currentObject = newScene.meshes[0];
 
                     engine.runRenderLoop(function(){
+                        currentObject.rotation.y += 0.002;
+                        calcFPS();
                         newScene.render();
                     });
                 });
@@ -37,68 +54,74 @@ window.onload = function(){
     }
 }
 
-function loadObject(filename){
-    if (BABYLON.Engine.isSupported()){
-        canvas = document.getElementById('renderCanvas');
-        if(engine == 'undefined'){
-            engine = new BABYLON.Engine(canvas, true);
-        }
-
-        BABYLON.SceneLoader.Load('', filename, engine, 
-            function(newScene){
-                newScene.executeWhenReady(function(){
-                    newScene.activeCamera.attachControl(canvas);
-
-                    engine.runRenderLoop(function(){
-                        newScene.render();
-                    });
-                });
-            },
-            function (progress){
-
-            });
+function calcFPS(){
+    now = Date.now();
+    currentFPS = 1000 / (now - previousDate);
+    if(currentFPS > 60){
+        currentFPS = 60;
     }
-}
-/*
-function loadJSONCompleted(meshesLoaded){
-    meshes = meshesLoaded;
-
-    // Call HTML5 rendering loop
-    requestAnimationFrame(drawingLoop);
-}
-
-function drawingLoop(){
-    var now = Date.now();
-    var currentFPS = 1000 / (now - previousDate);
     previousDate = now;
 
     divCurrentFPS.textContent = currentFPS.toFixed(2);
+}
 
-    if(lastFPSValues.length < 60){
-        lastFPSValues.push(currentFPS);
-    }
-    else{
-        lastFPSValues.shift();
-        lastFPSValues.push(currentFPS);
-        var totalValues = 0;
-        for(var i = 0; i < lastFPSValues.length; i++){
-            totalValues += lastFPSValues[i];
-        }
+function scaleCurrentObject(x, y, z){
+    currentObject.scaling.x = x;
+    currentObject.scaling.y = y;
+    currentObject.scaling.z = z;
+}
 
-        var averageFPS = totalValues / lastFPSValues.length;
-        divAverageFPS.textContent = averageFPS.toFixed(2);
-    }
+function scale(){
+    var x = document.getElementById('scaleX').value;
+    var y = document.getElementById('scaleY').value;
+    var z = document.getElementById('scaleZ').value;
+    scaleCurrentObject(x, y, z);
+}
 
-    device.clear();
+function translateCurrentObject(x, y, z){
+    currentObject.position.x = x;
+    currentObject.position.y = y;
+    currentObject.position.z = z;
+}
 
-    for(var i = 0; i < meshes.length; i++){
-        meshes[i].Rotation.y += 0.01;
-    }
+function trans(){
+    var x = document.getElementById('transX').value;
+    var y = document.getElementById('transY').value;
+    var z = document.getElementById('transZ').value;
+    translateCurrentObject(x, y, z);
+}
 
-    // Perform matrix operations
-    device.render(mera, meshes);
-    // Flush the backbuffer into the front buffer
-    device.present();
-    // Call the HTML5 loop recursively
-    requestAnimationFrame(drawingLoop);
-}*/
+function rotateCurrentObject(x, y, z){
+    currentObject.rotation.x = Math.PI/x;
+    currentObject.rotation.y = Math.PI/y;
+    currentObject.rotation.z = Math.PI/z;
+}
+
+function rotate(){
+    var x = document.getElementById('rotX').value;
+    var y = document.getElementById('rotY').value;
+    var z = document.getElementById('rotZ').value;
+    rotateCurrentObject(x, y, z);
+}
+
+function addPointLight(){
+    var light0 = new BABYLON.PointLight('Omni0', new BABYLON.Vector3(1, 10, 1),
+        currentScene);
+    light0.diffuse = new BABYLON.Color3(1, 0, 0);
+    light0.specular = new BABYLON.Color3(1, 1, 1);
+}
+
+function addDirectionalLight(){
+    var light0 = new BABYLON.DirectionalLight("Dir0", 
+        new BABYLON.Vector3(0, -1, 0), currentScene);
+    light0.diffuse = new BABYLON.Color3(1, 0, 0);
+    light0.specular = new BABYLON.Color3(1, 1, 1);
+}
+
+function addAmbientLight(){
+    var light0 = new BABYLON.HemisphericLight("Hemi0", 
+        new BABYLON.Vector3(0, 1, 0), currentScene);
+    light0.diffuse = new BABYLON.Color3(1, 1, 1);
+    light0.specular = new BABYLON.Color3(1, 1, 1);
+    light0.groundColor = new BABYLON.Color3(0, 0, 0);
+}

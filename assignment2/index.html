@@ -1,4 +1,4 @@
-<!-- Tui Popenoe -->
+<!-- tui popenoe -->
 <!-- CIS 6930 Assignment 2 -->
 
 <!DOCTYPE html>
@@ -16,8 +16,8 @@
         </title>
         <style>
             canvas{
-                width: 320px;
-                height: 240px;
+                width: 720px;
+                height: 540px;
             }
         </style>
         <script src='babylon.1.12.js'></script>
@@ -35,37 +35,37 @@
                         <tr>
                             <td>
                                 <a class='btn btn-primary' role='button'
-                                    onclick="loadObject('piano.babylon')">
+                                    onclick="loadScene('piano.babylon')">
                                     Piano
                                 </a>
                             </td>
                             <td>
                                 <a class='btn btn-warning' role='button'
-                                    onclick="loadObject('banana.babylon')">
+                                    onclick="loadScene('banana.babylon')">
                                     Banana
                                 </a>
                             </td>
                             <td>
                                 <a class='btn btn-success' role='button'
-                                    onclick="loadObject('trex.babylon')">
+                                    onclick="loadScene('trex.babylon')">
                                     T-Rex
                                 </a>
                             </td>
                             <td>
                                 <a class='btn btn-info' role='button'
-                                    onclick="loadObject('android.babylon')">
+                                    onclick="loadScene('android.babylon')">
                                     Android
                                 </a>
                             </td>
                             <td>
                                 <a class='btn btn-danger' role='button'
-                                onclick="loadObject('soldier.babylon')">
+                                onclick="loadScene('soldier.babylon')">
                                     Soldier
                                 </a>
                             </td>
                             <td>
                                 <a class='btn btn-primary' role='button'
-                                    onclick="loadObject('car.babylon')">
+                                    onclick="loadScene('car.babylon')">
                                     Car
                                 </a>
                             </td>
@@ -78,7 +78,7 @@
                     <div class='col-md-4'>
                         <h2>Render:</h2>
                         <div>
-                            <canvas id='renderCanvas' width='320' height='240'
+                            <canvas id='renderCanvas' width='720' height='540'
                                 style='background-color: black;'>
                             </canvas>
                             <br>
@@ -88,6 +88,66 @@
                             <span id='averageFPS'</span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class='container'>
+                <div class='row'>
+                    <div class='col-md-3'>
+                        <a class='btn btn-success' 
+                            onclick='scale()'>
+                            Scale
+                        </a>
+
+                        <p>X -Axis</p>
+                        <input class='input-sm' id='scaleX' value='0.01'>
+
+                        <p>Y -Axis</p>
+                        <input class='input-sm' id='scaleY' value='0.01'>
+
+                        <p>Z -Axis</p>
+                        <input class='input-sm' id='scaleZ' value='0.01'>
+                    </div>
+                    <div class='col-md-3'>
+                        <a class='btn btn-success' 
+                            onclick='trans()'>
+                            Translate
+                        </a>
+
+                        <p>X -Axis</p>
+                        <input class='input-sm' id='transX' value='0.01'>
+
+                        <p>Y -Axis</p>
+                        <input class='input-sm' id='transY' value='0.01'>
+
+                        <p>Z -Axis</p>
+                        <input class='input-sm' id='transZ' value='0.01'>
+                    </div>
+                    <div class='col-md-3'>
+                        <a class='btn btn-success' 
+                            onclick='rotate()'>
+                            Rotate
+                        </a>
+
+                        <p>X -Axis</p>
+                        <input class='input-sm' id='rotX' value='0.01'>
+
+                        <p>Y -Axis</p>
+                        <input class='input-sm' id='rotY' value='0.01'>
+
+                        <p>Z -Axis</p>
+                        <input class='input-sm' id='rotZ' value='0.01'>
+                    </div>
+                    <div class='col-md-3'>
+                        <a class='btn btn-primary' onclick='addPointLight()'>
+                            Point Light
+                        </a>
+                        <a class='btn btn-success' 
+                            onclick='addDirectionalLight()'>
+                            Directional Light
+                        </a>
+                        <a class='btn btn-warning' onclick='addAmbientLight()'>
+                            Ambient Light
+                        </a>
                 </div>
             </div>
         <div>
