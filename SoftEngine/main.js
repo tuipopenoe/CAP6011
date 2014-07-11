@@ -34,7 +34,6 @@ function drawingLoop(){
     device.clear();
 
     for(var i = 0; i < meshes.length; i++){
-        meshes[i].Rotation.x += 0.01;
         meshes[i].Rotation.y += 0.01;
     }
 
@@ -42,7 +41,6 @@ function drawingLoop(){
     device.render(mera, meshes);
     // Flush the backbuffer into the front buffer
     device.present();
-
     // Call the HTML5 loop recursively
     requestAnimationFrame(drawingLoop);
 }

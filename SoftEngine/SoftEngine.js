@@ -15,9 +15,9 @@ var SoftEngine;
         function Mesh(name, verticesCount, facesCount){
             this.name = name;
             this.Vertices = new Array(verticesCount);
-            this.Faces = new Array(facesCount)
-            this.Rotation = BABYLON.Vector3.Zero();
-            this.Position = BABYLON.Vector3.Zero();
+            this.Faces = new Array(facesCount);
+            this.Rotation = new BABYLON.Vector3(0, 0, 0);
+            this.Position = new BABYLON.Vector3(0, 0, 0);
         }
         return Mesh;
     })();
@@ -32,6 +32,8 @@ var SoftEngine;
             this.workingWidth = canvas.width;
             this.workingHeight = canvas.height;
             this.workingContext = this.workingCanvas.getContext("2d");
+            this.depthbuffer = new Array(this.workingWidth * 
+                this.workingHeight);
         }
 
         //This function called to clear the back buffer with a specific color
@@ -44,6 +46,12 @@ var SoftEngine;
             // clear out the back buffer
             this.backbuffer = this.workingContext.getImageData(0, 0, 
                 this.workingWidth, this.workingHeight);
+
+            // Clear depth buffer
+            for(var i = 0; i < this.depthbuffer.length; i++){
+                // Maximize possible value
+                this.depthbuffer[i] = 10000000;
+            }
         };
 
         // Once everything is ready, flush back buffer into the front buffer
@@ -52,29 +60,37 @@ var SoftEngine;
         };
 
         // Called to put a pixel on screen at a specific X, Y coordinates
-        Device.prototype.putPixel = function(x, y, color){
+        Device.prototype.putPixel = function(x, y, z, color){
             this.backbufferdata = this.backbuffer.data;
             // As we have a 1-D Array for our back buffer
             // Need to know the equivalent cell index in 1-D based
             // on the 2D coordinates of the screen
-            var index = ((x >> 0) + (y >> 0) *this.workingWidth) * 4;
+            var index = ((x >> 0) + (y >> 0) * this.workingWidth);
+            var index4  = index * 4;
+
+            if(this.depthbuffer[index] < z){
+                return;
+            }
+            
+            this.depthbuffer[index] = z;
 
             // RGBA color space is used by the HTML5 canvas
-            this.backbufferdata[index] = color.r *255;
-            this.backbufferdata[index+1] = color.g *255;
-            this.backbufferdata[index+2] = color.b *255;
-            this.backbufferdata[index+3] = color.a *255;
+            this.backbufferdata[index4] = color.r *255;
+            this.backbufferdata[index4 + 1] = color.g *255;
+            this.backbufferdata[index4 + 2] = color.b *255;
+            this.backbufferdata[index4 + 3] = color.a *255;
         };
 
         // Project takes 3D coordinates and transform them into 2D
         // coordinates using the transformation matrix
         Device.prototype.project = function(coord, transMat){
+            // transforming the coordinates
             var point = BABYLON.Vector3.TransformCoordinates(coord, transMat);
             // The transformed coordinates will be based on coordinate system
             // starting on the center of the screen. Screens are normally 
             // drawn from top left, so need to transform them.
-            var x = point.x * this.workingWidth + this.workingWidth / 2.0 >>0;
-            var y = -point.y *this.workingHeight + this.workingHeight /2.0>>0;
+            var x = point.x * this.workingWidth + this.workingWidth / 2.0;
+            var y = -point.y *this.workingHeight + this.workingHeight / 2.0;
             return (new BABYLON.Vector3(x, y, point.z));
         };
 
@@ -83,8 +99,8 @@ var SoftEngine;
             // Clipping what's visible on screen
             if(point.x >= 0 && point.y >= 0 && point.x < this.workingWidth 
                 && point.y < this.workingHeight){
-                // Drawing a yellow point
-                this.putPixel(point.x,point.y, color);
+                // Draw a point of color
+                this.putPixel(point.x, point.y, point.z, color);
             }
         };
 
@@ -97,14 +113,15 @@ var SoftEngine;
                 max = 1;
             }
             return Math.max(min, Math.min(value, max));
-        }
+        };
+
 
         // Interpolating the value between 2 vertices
         // min is the starting point and max the ending point
         // gradient is the % between the 2 points
         Device.prototype.interpolate = function(min, max, gradient){
             return min + (max - min) * this.clamp(gradient);
-        }
+        };
 
         // Drawing line between 2 points from left to right
         // papb -> pcpd
@@ -118,27 +135,31 @@ var SoftEngine;
             var sx = this.interpolate(pa.x, pb.x, gradient1) >> 0;
             var ex = this.interpolate(pc.x, pd.x, gradient2) >> 0;
 
+            var z1 = this.interpolate(pa.z, pb.z, gradient1);
+            var z2 = this.interpolate(pc.z, pd.z, gradient2);
+
             for(var x = sx; x < ex; x++){
-                this.drawPoint(new BABYLON.Vector2(x, y), color);
+                var gradient = (x - sx) / (ex - sx);
+                var z = this.interpolate(z1, z2, gradient);
+                this.drawPoint(new BABYLON.Vector3(x, y, z), color);
             }
         };
 
         Device.prototype.drawTriangle = function(p1, p2, p3, color){
             // Sorting the points in order to always have this order on screen
             // p1, p2, p3, with p1 always up, then p2 between p1 and p3
-            var temp;
             if(p1.y > p2.y){
-                temp = p2;
+                var temp = p2;
                 p2 = p1;
                 p1 = temp;
             }
             if(p2.y > p3.y){
-                temp = p2;
+                var temp = p2;
                 p2 = p3;
                 p3 = temp;
             }
-            if(p1.py > p2.y){
-                temp = p2;
+            if(p1.y > p2.y){
+                var temp = p2;
                 p2 = p1;
                 p1 = temp;
             }
@@ -210,10 +231,10 @@ var SoftEngine;
         };
 
         Device.prototype.drawBline = function(point0, point1){
-            var x0 = point0.x >> 0;
-            var y0 = point0.y >> 0;
-            var x1 = point1.x >> 0;
-            var y1 = point1.y >> 0;
+            var x0 = point0.x;
+            var y0 = point0.y;
+            var x1 = point1.x;
+            var y1 = point1.y;
             var dx = Math.abs(x1-x0);
             var dy = Math.abs(y1-y0);
             var sx = (x0 < x1) ? 1 : -1;
@@ -350,7 +371,7 @@ var SoftEngine;
 
                 // Get the position set in model editing program
                 var position = jsonObject.meshes[meshIndex].position;
-                mesh.position = new BABYLON.Vector3(position[0], position[1],
+                mesh.Position = new BABYLON.Vector3(position[0], position[1],
                     position[2]);
                 meshes.push(mesh);
             }
