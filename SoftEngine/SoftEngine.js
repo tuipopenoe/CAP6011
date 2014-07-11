@@ -26,6 +26,61 @@ var SoftEngine;
 
     SoftEngine.Mesh = Mesh;
 
+    // Initialize Texture
+    var Texture = (function(){
+        // Working with a fixed size texture (512x512, 1024x1024)
+        function Texture(filename, width, height){
+            this.width = width;
+            this.height = height;
+            this.load(filename);
+        }
+
+        Texture.prototype.load = function(filename){
+            var _this = this;
+            var imageTexture = new Image();
+            imageTexture.height = this.height;
+            imageTexture.width = this.width;
+            imageTexture.onload = function(){
+                var internalCanvas = document.createElement('canvas');
+                internalCanvas.width = _this.width;
+                internalCanvas.height = _this.height;
+                var internalContext = internalCanvas.getContext('2d');
+                internalContext.drawImage(imageText, 0, 0);
+                _this.internalBuffer = internalContext.getImageData(0, 0, 
+                    _this.width, _this.height);
+            };
+            imageTexture.src = filename;
+        };
+
+        // Takes the U & V coordinates exported by modelling program
+        // and return the corresponding pixel color in the texture
+        Texture.prototype.map = function(tu, tv){
+            if(this.internalBuffer){
+                // using a % operator to cycle/repeat the texture if needed
+                var u = Math.abs(((tu * this.width) % this.width));
+                var v = Math.abs(((tv * this.height) % this.height));
+
+                var pos = (u + v * this.width) * 4;
+
+                var r = this.internalBuffer.data[pos];
+                var g = this.internalBuffer.data[pos + 1];
+                var b = this.internalBuffer.data[pos + 2];
+                var a = this.internalBuffer.data[pos + 3];
+
+                return new BABYLON.Color4(r / 255.0, g / 255.0, b / 255.0,
+                    a / 255.0);
+            }
+            // Image is not loaded yet
+            else{
+                return new BABYLON.Color4(1, 1, 1, 1);
+            }
+        };
+
+        return Texture;
+    })();
+
+    SoftEngine.Texture = Texture;
+
     var Device = (function(){
         // Device Constructor
         function Device(canvas){
@@ -154,7 +209,7 @@ var SoftEngine;
         // papb -> pcpd
         // pa, pb, pc, and pd must then be sorted before
         Device.prototype.processScanLine = function(data, va, vb, vc, vd, 
-            color){
+            color, texture){
             var pa = va.Coordinates;
             var pb = vb.Coordinates;
             var pc = vc.Coordinates;
@@ -176,17 +231,35 @@ var SoftEngine;
             var snl = this.interpolate(data.ndotla, data.ndotlb, gradient1);
             var enl = this.interpolate(data.ndotlc, data.ndotld, gradient2);
 
+            var su = this.interpolate(data.ua, data.ub, gradient1);
+            var eu = this.interpolate(data.uc, data.ud, gradient2);
+            var sv = this.interpolate(data.va, data.vb, gradient1);
+            var ev = this.interpolate(data.vc, data.vd, gradient2);
+
             for(var x = sx; x < ex; x++){
                 var gradient = (x - sx) / (ex - sx);
                 var z = this.interpolate(z1, z2, gradient);
         
                 var ndotl = this.interpolate(snl, enl, gradient);
+
+                var u = this.interpolate(snl, enl, gradient);
+                var v = this.interpolate(sv, ev, gradient);
+
+                var textureColor;
+
+                if(texture){
+                    textureColor = texture.map(u, v);
+                }
+                else{
+                    textureColor = new BABYLON.Color4(1, 1, 1, 1);
+                }
         
                 // Changing the color value using the cosine of the angle
                 // between the light vector and the normal vector
                 this.drawPoint(new BABYLON.Vector3(x, data.currentY, z),
-                    new BABYLON.Color4(color.r * ndotl, color.g *ndotl, 
-                        color.b * ndotl, 1));
+                    new BABYLON.Color4( color.r * ndotl * textureColor.r,
+                                        color.g *ndotl * textureColor.g,
+                                        color.b * ndotl * textureColor.b, 1));
             }
         };
 
@@ -404,6 +477,20 @@ var SoftEngine;
 
         Device.prototype.CreateMeshesFromJSON = function(jsonObject){
             var meshes = [];
+            var materials = [];
+
+            for(var materialIndex = 0; materialIndex < 
+                    jsonObject.materials.length; materialIndex++){
+                var material = {};
+
+                material.Name = jsonObject.materials[materialIndex].name;
+                material.ID = jsonObject.materials[materialIndex].id;
+                if(jsonObject.materials[materialIndex].diffuseTexture){
+                    material.DiffuseTextureName = 
+                    jsonObject.materials[materialIndex].diffuseTexture.name;
+                }
+                material[material.ID] = material;
+            }
 
             for(var meshIndex = 0; meshIndex < jsonObject.meshes.length;
                 meshIndex++){
@@ -451,11 +538,24 @@ var SoftEngine;
                     var nx = verticesArray[index * verticesStep +3];
                     var ny = verticesArray[index * verticesStep +4];
                     var nz = verticesArray[index * verticesStep +5];
+
                     mesh.Vertices[index] = {
                         Coordinates: new BABYLON.Vector3(x, y, z),
                         Normal: new BABYLON.Vector3(nx, ny, nz),
                         WorldCoordinates: null
                     };
+
+                    if(uvCount > 0){
+                        // Loading the texture coordinates
+                        var u = verticesArray[index * verticesStep + 6];
+                        var v = verticesArray[index * verticesStep + 7];
+                        mesh.Vertices[index].TextureCoordinates = 
+                             new BABYLON.Vector2(u, v);
+                    }
+                    else{
+                        mesh.Vertices[index].TextureCoordinates = 
+                             new BABYLON.Vector2(0,0);
+                    }
                 }
 
                 for(var index = 0; index < facesCount; index++){
@@ -469,6 +569,14 @@ var SoftEngine;
                 var position = jsonObject.meshes[meshIndex].position;
                 mesh.Position = new BABYLON.Vector3(position[0], position[1],
                     position[2]);
+
+                if(uvCount > 0){
+                    var meshTextureID = 
+                        jsonObject.meshes[meshIndex].materialID;
+                    var meshTextureName = 
+                        materials[meshTextureID].DiffuseTextureName;
+                    mesh.Texture = new Texture(meshTextureName, 512, 512);
+                }
                 meshes.push(mesh);
             }
 
