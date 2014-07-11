@@ -21,6 +21,23 @@ var SoftEngine;
             this.Rotation = new BABYLON.Vector3(0, 0, 0);
             this.Position = new BABYLON.Vector3(0, 0, 0);
         }
+
+        Mesh.prototype.computeFacesNormals = function(){
+            for(var indexFaces = 0; indexFaces < this.Faces.length; 
+                indexFaces++){
+                var currentFace = this.Faces[indexFaces];
+
+                var vertexA = this.Vertices[currentFace.A];
+                var vertexB = this.Vertices[currentFace.B];
+                var vertexC = this.Vertices[currentFace.C];
+
+                this.Faces[indexFaces].Normal = 
+                    (vertexA.Normal.add(vertexB.Normal.add(vertexC.Normal)))
+                        .scale(1/3);
+                this.Faces[indexFaces].Normal.normalize();
+            }
+        };
+
         return Mesh;
     })();
 
@@ -45,7 +62,7 @@ var SoftEngine;
                 internalCanvas.width = _this.width;
                 internalCanvas.height = _this.height;
                 var internalContext = internalCanvas.getContext('2d');
-                internalContext.drawImage(imageText, 0, 0);
+                internalContext.drawImage(imageTexture, 0, 0);
                 _this.internalBuffer = internalContext.getImageData(0, 0, 
                     _this.width, _this.height);
             };
@@ -182,7 +199,8 @@ var SoftEngine;
             return ({
                 Coordinates: new BABYLON.Vector3(x, y, point2d.z),
                 Normal: normal3DWorld,
-                WorldCoordinates: point3DWorld
+                WorldCoordinates: point3DWorld,
+        TextureCoordinates: vertex.TextureCoordinates
             });
         };
 
@@ -242,7 +260,7 @@ var SoftEngine;
         
                 var ndotl = this.interpolate(snl, enl, gradient);
 
-                var u = this.interpolate(snl, enl, gradient);
+                var u = this.interpolate(su, eu, gradient);
                 var v = this.interpolate(sv, ev, gradient);
 
                 var textureColor;
@@ -263,7 +281,7 @@ var SoftEngine;
             }
         };
 
-        Device.prototype.drawTriangle = function(v1, v2, v3, color){
+        Device.prototype.drawTriangle = function(v1, v2, v3, color, texture){
             // Sorting the points in order to always have this order on screen
             // p1, p2, p3, with p1 always up, then p2 between p1 and p3
             if(v1.Coordinates.y > v2.Coordinates.y){
@@ -286,11 +304,6 @@ var SoftEngine;
             var p2 = v2.Coordinates;
             var p3 = v3.Coordinates;
 
-            // normal face's vector is the average normal between each vertex's
-            // normal computing also the center point of the face
-            var vnFace = (v1.Normal.add(v2.Normal.add(v3.Normal))).scale(1/3);
-            var centerPoint = (v1.WorldCoordinates.add(v2.WorldCoordinates.add(
-                v3.WorldCoordinates))).scale(1/3);
             // light position
             var lightPos = new BABYLON.Vector3(0, 10, 10);
             // computing the cos of the angle between the light vector and the
@@ -332,18 +345,41 @@ var SoftEngine;
                     data.currentY = y;
 
                     if(y < p2.y){
-            data.ndotla = nl1;
-            data.ndotlb = nl3;
-            data.ndotlc = nl1;
-            data.ndotld = nl2;
-                        this.processScanLine(data, v1, v3, v1, v2, color);
+                        data.ndotla = nl1;
+                        data.ndotlb = nl3;
+                        data.ndotlc = nl1;
+                        data.ndotld = nl2;
+
+                        data.ua = v1.TextureCoordinates.x;
+                        data.ub = v3.TextureCoordinates.x;
+                        data.uc = v1.TextureCoordinates.x;
+                        data.ud = v2.TextureCoordinates.x;
+
+                        data.va = v1.TextureCoordinates.y;
+                        data.vb = v3.TextureCoordinates.y;
+                        data.vc = v1.TextureCoordinates.y;
+                        data.vd = v2.TextureCoordinates.y;
+
+                        this.processScanLine(data, v1, v3, v1, v2, color, texture);
                     }
                     else{
                         data.ndotla = nl1;
-            data.ndotlb = nl3;
-            data.ndotlc = nl2;
-            data.ndotld = nl3;
-            this.processScanLine(data, v1, v3, v2, v3, color);
+                        data.ndotlb = nl3;
+                        data.ndotlc = nl2;
+                        data.ndotld = nl3;
+
+                        data.ua = v1.TextureCoordinates.x;
+                        data.ub = v3.TextureCoordinates.x;
+                        data.uc = v2.TextureCoordinates.x;
+                        data.ud = v3.TextureCoordinates.x;
+
+                        data.va = v1.TextureCoordinates.y;
+                        data.vb = v3.TextureCoordinates.y;
+                        data.vc = v2.TextureCoordinates.y;
+                        data.vd = v3.TextureCoordinates.y;
+
+
+                        this.processScanLine(data, v1, v3, v2, v3, color, texture);
                     }
                 }
             }
@@ -357,17 +393,39 @@ var SoftEngine;
 
                     if(y < p2.y){
                         data.ndotla = nl1;
-            data.ndotlb = nl2;
-            data.ndotlc = nl1;
-            data.ndotld = nl3;
-            this.processScanLine(data, v1, v2, v1, v3, color);
+                        data.ndotlb = nl2;
+                        data.ndotlc = nl1;
+                        data.ndotld = nl3;
+
+                        data.ua = v1.TextureCoordinates.x;
+                        data.ub = v2.TextureCoordinates.x;
+                        data.uc = v1.TextureCoordinates.x;
+                        data.ud = v3.TextureCoordinates.x;
+
+                        data.va = v1.TextureCoordinates.y;
+                        data.vb = v2.TextureCoordinates.y;
+                        data.vc = v1.TextureCoordinates.y;
+                        data.vd = v3.TextureCoordinates.y;
+
+                        this.processScanLine(data, v1, v2, v1, v3, color, texture);
                     }
                     else{
                         data.ndotla = nl2;
-            data.ndotlb = nl3;
-            data.ndotlc = nl1;
-            data.ndotld = nl3;
-            this.processScanLine(data, v2, v3, v1, v3, color);
+                        data.ndotlb = nl3;
+                        data.ndotlc = nl1;
+                        data.ndotld = nl3;
+
+                        data.ua = v2.TextureCoordinates.x;
+                        data.ub = v3.TextureCoordinates.x;
+                        data.uc = v1.TextureCoordinates.x;
+                        data.ud = v3.TextureCoordinates.x;
+
+                        data.va = v2.TextureCoordinates.y;
+                        data.vb = v3.TextureCoordinates.y;
+                        data.vc = v1.TextureCoordinates.y;
+                        data.vd = v3.TextureCoordinates.y;
+
+                        this.processScanLine(data, v2, v3, v1, v3, color, texture);
                     }
                 }
             }
@@ -418,8 +476,6 @@ var SoftEngine;
             }
         };*/
 
-
-
         // The main method of the engine that re-compute each vertex projection
         // during each frame
         Device.prototype.render = function(camera, meshes){
@@ -437,24 +493,34 @@ var SoftEngine;
                     .multiply(BABYLON.Matrix.Translation(
                         cMesh.Position.x, cMesh.Position.y, cMesh.Position.z));
 
-                var transformMatrix = worldMatrix.multiply(viewMatrix)
-                    .multiply(projectionMatrix);
+                var worldView = worldMatrix.multiply(viewMatrix);
+                var transformMatrix = worldView.multiply(projectionMatrix);
 
                 for(var indexFaces = 0; indexFaces < cMesh.Faces.length; 
                     indexFaces++){
                     var currentFace = cMesh.Faces[indexFaces];
-                    var vertexA = cMesh.Vertices[currentFace.A];
-                    var vertexB = cMesh.Vertices[currentFace.B];
-                    var vertexC = cMesh.Vertices[currentFace.C];
+                    
+                    var transformedNormal = 
+                        BABYLON.Vector3.TransformNormal(currentFace.Normal,
+                        worldView);
+                        
+                    if(transformedNormal.z < 0){
+                        var vertexA = cMesh.Vertices[currentFace.A];
+                        var vertexB = cMesh.Vertices[currentFace.B];
+                        var vertexC = cMesh.Vertices[currentFace.C];
 
-                    var pixelA = this.project(vertexA, transformMatrix, worldMatrix);
-                    var pixelB = this.project(vertexB, transformMatrix, worldMatrix);
-                    var pixelC = this.project(vertexC, transformMatrix, worldMatrix);
+                        var pixelA = this.project(vertexA, transformMatrix,
+                            worldMatrix);
+                        var pixelB = this.project(vertexB, transformMatrix,
+                            worldMatrix);
+                        var pixelC = this.project(vertexC, transformMatrix,
+                            worldMatrix);
 
-                    var color = 1.0;
-            
-                    this.drawTriangle(pixelA, pixelB, pixelC, 
-                        new BABYLON.Color4(color, color, color, 1));
+                        var color = 1.0;
+                
+                        this.drawTriangle(pixelA, pixelB, pixelC, 
+                            new BABYLON.Color4(color, color, color, 1), cMesh.Texture);
+                    }
                 }
             }
         };
@@ -577,6 +643,7 @@ var SoftEngine;
                         materials[meshTextureID].DiffuseTextureName;
                     mesh.Texture = new Texture(meshTextureName, 512, 512);
                 }
+		mesh.computeFacesNormals();
                 meshes.push(mesh);
             }
 
