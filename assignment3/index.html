@@ -21,7 +21,6 @@
             }
         </style>
         <script src='babylon.1.12.js'></script>
-        <script src='main.js'></script>
         <script src='scene.js'></script>
     </head>
     <body>
@@ -31,6 +30,21 @@
             </div>
             <div class='jumbotron'>
                 <h1>TRenderer</h1>
+                <h2>3D Virtual Environment with Gouraud shading, Specular Reflectance, and ambient, point, and directional lighting
+                </h2>
+                <br>
+                <p>
+                    To create a new randomized scene, click the Create Scene button below. This will create one of a series of
+                    geometric shapes with randomized colors, sizes and 
+                    lighting. As this code is operating system independent, 
+                    any modern browser can render it without specific software,
+                    so long as that browser and operating system can render 
+                    WebGL content. This minimizes the impact on the user, and
+                    allows for greater market penetration. Performance is
+                    listed beneath the rendered image in an FPS calculator. Performance is dependent upon the user's CPU and GPU, as
+                    the WebGL framework uses both to render images through a 
+                    browser. 
+                </p>
                 <a class='btn btn-success btn-lg' onclick='createScene()'>
                     Create New Scene
                 </a>
@@ -38,17 +52,18 @@
             <div class='container'>
                 <div class='row'>
                     <div class='col-md-4'>
-                        <h2>Render:</h2>
+                        <h2>Render:
+                            <span id='renderContent'></span>
+                        </h2>
                         <div>
                             <canvas id='renderCanvas' width='720' height='540'
                                 style='background-color: black;' 
                                 style='align: center'>
                             </canvas>
                             <br>
-                            Current FPS:
+                            Initial FPS:
                             <span id='currentFPS'></span>
-                            Average FPS: 
-                            <span id='averageFPS'</span>
+                            Current FPS: 60
                         </div>
                     </div>
                 </div>
